@@ -32,7 +32,7 @@
 // [TOOL] Load .env file — MUST be first, before importing anything that
 // reads process.env. Dotenv reads the .env file and populates process.env
 // with ANTHROPIC_API_KEY, TAVILY_API_KEY, etc.
-import 'dotenv/config';
+import './loadEnv.js';
 
 // Import only the agent we want to test — no Express, no routing
 import { researchAgent } from './agents/researchAgent.js';

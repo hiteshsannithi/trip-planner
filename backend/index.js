@@ -11,19 +11,23 @@
 //          them to the right handler (routes/plan.js).
 // ============================================================
 
-// [TOOL] Load environment variables from .env into process.env
-// WHY: We call this FIRST, before any other import that might read
-//      process.env. If dotenv runs after those imports, the keys
-//      would be undefined and all API calls would fail silently.
-import 'dotenv/config';
+// [TOOL] Load environment variables FIRST — before any other import.
+// WHY a separate file: ES modules hoist all imports and execute them
+// before the module body. If we called dotenv.config() in this file's
+// body, it would run AFTER all agents are already imported and have
+// called new Anthropic() with a missing key. loadEnv.js is a module
+// whose body IS the dotenv.config() call — so it runs at import time.
+// See loadEnv.js for the full explanation.
+import './loadEnv.js';
 
 import express from 'express';
 import cors from 'cors';
 
-// [WORKFLOW] Import the plan route — this is where all AI logic lives.
-// We will create this file in Session 2. For Session 1, this import
-// is here but the route isn't mounted yet (see the comment below).
+// [WORKFLOW] Import routes — each file handles a different endpoint.
+// plan.js  → POST /api/plan  — runs the full 8-agent workflow
+// chat.js  → POST /api/chat  — re-runs ONE agent based on user's message
 import planRouter from './routes/plan.js';
+import chatRouter from './routes/chat.js';
 
 // Create the Express application instance.
 // Think of 'app' as the server object — everything gets attached to it.
@@ -61,8 +65,13 @@ app.use(express.json({ limit: '10mb' }));
 //      All trip-planning logic lives in routes/plan.js. index.js
 //      only knows "requests to /api go to planRouter".
 //
-// A POST to /api/plan → planRouter handles it → runs the 8-agent workflow
+// POST /api/plan → 8-agent workflow (full plan generation)
 app.use('/api', planRouter);
+
+// [WORKFLOW] POST /api/chat → partial re-run workflow (chat refinement)
+// WHY separate router: Keeps plan.js and chat.js self-contained.
+// Each route file owns its own logic. index.js just wires them together.
+app.use('/api', chatRouter);
 
 // ── Health check ─────────────────────────────────────────────
 // A simple GET / endpoint so you can verify the server is running

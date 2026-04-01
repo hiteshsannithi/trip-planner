@@ -31,7 +31,9 @@
 //     → agent reads results and continues reasoning
 // ============================================================
 
-import fetch from 'node-fetch';
+// No import needed for fetch — Node.js 18+ includes fetch as a global built-in.
+// This is why we removed node-fetch from package.json. If you ever need to run
+// this on Node 16 or older, add: import fetch from 'node-fetch'
 
 // [TOOL] The main export — a single async function.
 // WHY async: The Tavily API call takes ~1-2 seconds (network I/O).
