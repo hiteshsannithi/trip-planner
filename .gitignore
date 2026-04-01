@@ -1,0 +1,24 @@
+# Dependencies — never commit these, npm install recreates them
+node_modules/
+
+# Environment files — CRITICAL: these contain your API keys
+# .env.example IS committed (it's a template with no real values)
+# .env is NOT committed (it has your real keys)
+.env
+
+# macOS metadata files — noise, not code
+.DS_Store
+
+# Build output — frontend gets built into dist/, no need to track
+dist/
+
+# Editor files
+.vscode/
+.idea/
+
+# Claude Code local settings
+.claude/
+
+# Logs
+*.log
+npm-debug.log*
