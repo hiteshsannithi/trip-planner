@@ -1,0 +1,581 @@
+/* ============================================================
+   App.css — Global Styles for Trip Planner
+   ============================================================
+   Plain CSS, no Tailwind. Organized in sections matching components.
+   WHY no CSS framework: Keeps dependencies minimal and forces you
+   to understand exactly what each style does.
+   ============================================================ */
+
+/* ── Reset & base ─────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── App layout ───────────────────────────────────────────── */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  background: #1a1a2e;
+  color: white;
+  padding: 20px 32px;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.app-header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #e2b96c;
+}
+
+.app-header p {
+  font-size: 0.9rem;
+  color: #8892b0;
+}
+
+.app-main {
+  flex: 1;
+  padding: 32px;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Trip Form ────────────────────────────────────────────── */
+.form-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 16px;
+}
+
+.form-card {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  width: 100%;
+  max-width: 720px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+.form-card h2 {
+  font-size: 1.6rem;
+  margin-bottom: 6px;
+  color: #1a1a2e;
+}
+
+.form-subtitle {
+  color: #6b7280;
+  margin-bottom: 28px;
+  font-size: 0.95rem;
+}
+
+.trip-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.form-group input {
+  padding: 10px 14px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  background: white;
+  transition: border-color 0.2s;
+  width: 100%;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.submit-btn {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+.submit-btn:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+
+/* ── Output / Results ─────────────────────────────────────── */
+.output-container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.output-header {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 28px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.output-header h2 {
+  font-size: 1.4rem;
+  color: #1a1a2e;
+}
+
+.header-dates {
+  font-weight: 400;
+  color: #6b7280;
+  font-size: 1rem;
+}
+
+.output-header p {
+  color: #6b7280;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+.reset-btn {
+  background: #1a1a2e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 0.875rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.reset-btn:hover {
+  background: #2d2d4e;
+}
+
+/* ── Agent Cards Grid ─────────────────────────────────────── */
+.agents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+.agent-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 2px solid transparent;
+  transition: border-color 0.3s;
+}
+
+/* Highlight animation when a card is updated by chat */
+.card-highlighted {
+  border-color: #4f46e5;
+  animation: highlight-pulse 2s ease-out forwards;
+}
+
+@keyframes highlight-pulse {
+  0%   { border-color: #4f46e5; background: #f0f0ff; }
+  100% { border-color: transparent; background: white; }
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.card-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+/* ── Status dots ──────────────────────────────────────────── */
+/* WHY inline-block with border-radius: creates a circle */
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.status-waiting  { background: #d1d5db; }
+.status-running  { background: #3b82f6; animation: pulse 1.2s infinite; }
+.status-done     { background: #22c55e; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(1.3); }
+}
+
+/* ── Agent content styles ─────────────────────────────────── */
+.agent-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.875rem;
+}
+
+.agent-content ul {
+  margin: 4px 0 0 18px;
+}
+
+.agent-content li {
+  margin-bottom: 4px;
+  color: #374151;
+}
+
+.status-message {
+  font-size: 0.875rem;
+  font-style: italic;
+}
+
+.status-message.waiting { color: #9ca3af; }
+.status-message.running { color: #3b82f6; }
+
+.option-card {
+  background: #f9fafb;
+  border-radius: 8px;
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 4px;
+  font-size: 0.85rem;
+}
+
+.option-card p {
+  grid-column: 1 / -1;
+  color: #4b5563;
+}
+
+.option-card strong {
+  color: #1a1a2e;
+}
+
+.option-price {
+  font-weight: 700;
+  color: #059669;
+  font-size: 0.95rem;
+}
+
+.option-detail {
+  color: #6b7280 !important;
+  font-size: 0.8rem !important;
+}
+
+.price-highlight {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #059669;
+}
+
+.tip {
+  background: #fffbeb;
+  border-left: 3px solid #f59e0b;
+  padding: 8px 12px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+/* ── Itinerary text ───────────────────────────────────────── */
+/* WHY pre with white-space: preserves markdown line breaks and
+   indentation without needing a markdown parser library */
+.itinerary-text {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: #374151;
+}
+
+/* ── Budget ───────────────────────────────────────────────── */
+.budget-status {
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.budget-ok    { background: #dcfce7; color: #166534; }
+.budget-under { background: #dbeafe; color: #1e40af; }
+.budget-over  { background: #fee2e2; color: #991b1b; }
+
+.budget-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.budget-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  padding: 4px 0;
+  border-bottom: 1px solid #f3f4f6;
+  color: #4b5563;
+}
+
+.budget-total {
+  font-weight: 700;
+  color: #1a1a2e;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* ── Packing list ─────────────────────────────────────────── */
+.packing-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.packing-category strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.packing-category ul {
+  margin-left: 16px;
+}
+
+.packing-category li {
+  font-size: 0.8rem;
+  margin-bottom: 3px;
+  color: #4b5563;
+}
+
+.tip.full-width {
+  grid-column: 1 / -1;
+}
+
+/* ── Full Plan section ────────────────────────────────────── */
+.full-plan {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.full-plan h2 {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: #1a1a2e;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.plan-text {
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: #374151;
+}
+
+/* ── Chat Section ─────────────────────────────────────────── */
+.chat-section {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chat-header h2 {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+.chat-header p {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.chat-examples {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.chat-messages {
+  max-height: 360px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 0;
+}
+
+.chat-empty {
+  color: #9ca3af;
+  font-style: italic;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.chat-message {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 80%;
+}
+
+.chat-message.user {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.chat-message.assistant {
+  align-self: flex-start;
+}
+
+.chat-role {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.chat-message.user p {
+  background: #4f46e5;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 12px 12px 4px 12px;
+  font-size: 0.9rem;
+}
+
+.chat-message.assistant p {
+  background: #f3f4f6;
+  color: #1a1a2e;
+  padding: 10px 14px;
+  border-radius: 12px 12px 12px 4px;
+  font-size: 0.9rem;
+}
+
+.chat-thinking {
+  font-style: italic;
+  color: #6b7280 !important;
+}
+
+.chat-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #1a1a2e;
+  transition: border-color 0.2s;
+}
+
+.chat-input:focus {
+  outline: none;
+  border-color: #4f46e5;
+}
+
+.chat-input:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+}
+
+.chat-send-btn {
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.chat-send-btn:hover:not(:disabled) {
+  background: #4338ca;
+}
+
+.chat-send-btn:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+}
+
+/* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .app-main { padding: 16px; }
+  .form-row { grid-template-columns: 1fr; }
+  .form-card { padding: 24px; }
+  .agents-grid { grid-template-columns: 1fr; }
+  .packing-grid { grid-template-columns: 1fr; }
+  .output-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .chat-message { max-width: 95%; }
+}
