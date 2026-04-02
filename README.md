@@ -1,7 +1,10 @@
-# Trip Planner — AI Multi-Agent App
+# ✈️ Voyagr — AI Multi-Agent Travel Planner
 
 > A learning project: build a real AI application while deeply understanding
 > every pattern — workflows, agents, tools, and streaming.
+
+**Live app:** https://trip-planner-ecru-tau.vercel.app
+**Backend API:** https://trip-planner-wpbe.onrender.com
 
 ---
 
@@ -589,6 +592,10 @@ Use this section to record what you learned after each session.
 ### Session 4 — Deploy
 *Date: [fill in]*
 *What I built:* Deployed to Render (backend) + Vercel (frontend)
+
+**Live URLs:**
+- Frontend: https://trip-planner-ecru-tau.vercel.app
+- Backend: https://trip-planner-wpbe.onrender.com
 
 **What I learned:**
 - [fill in]
