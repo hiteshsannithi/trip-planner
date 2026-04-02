@@ -172,7 +172,7 @@ body {
 
 /* LEFT — sticky chat panel */
 .output-left {
-  width: 320px;
+  width: 380px;
   flex-shrink: 0;
   position: sticky;
   top: 20px;
@@ -360,6 +360,33 @@ body {
   border-radius: 0 6px 6px 0;
   font-size: 0.85rem;
   color: #374151;
+}
+
+/* ── Booking links ────────────────────────────────────────── */
+.booking-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f3f4f6;
+}
+
+.booking-link {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #4f46e5;
+  text-decoration: none;
+  padding: 5px 10px;
+  border: 1.5px solid #e0e7ff;
+  border-radius: 6px;
+  background: #f5f3ff;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.booking-link:hover {
+  background: #ede9fe;
+  border-color: #4f46e5;
 }
 
 /* ── Itinerary text ───────────────────────────────────────── */
@@ -603,7 +630,7 @@ body {
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
-@media (max-width: 900px) {
+@media (max-width: 960px) {
   /* Stack chat below the plan cards on smaller screens */
   .output-body { flex-direction: column-reverse; }
   .output-left { width: 100%; position: static; max-height: none; }

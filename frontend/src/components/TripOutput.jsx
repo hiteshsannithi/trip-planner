@@ -50,13 +50,32 @@ function StatusDot({ status }) {
   return <span className={`status-dot status-${status}`} />;
 }
 
+// ── Booking search links ──────────────────────────────────────
+// WHAT: Generates pre-filled search URLs for external booking sites.
+// WHY: We don't have real booking APIs, but we can deep-link into
+//   Google Flights / Booking.com / Kayak with the trip's details
+//   so the user lands on a relevant search page.
+function BookingLink({ href, label }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="booking-link"
+    >
+      {label} ↗
+    </a>
+  );
+}
+
 // ── Render each agent's data in a structured way ──────────────
 // WHAT: Converts raw JSON data from each agent into readable UI.
 // WHY A SWITCH: Each agent returns a different data shape.
 //   flights returns { options: [...], cheapestPrice, bookingTip }
 //   research returns { weather, bestAreas, visaInfo, ... }
 //   We need different rendering for each.
-function AgentContent({ agentId, data }) {
+// tripDetails is passed through so booking links can use destination/dates.
+function AgentContent({ agentId, data, tripDetails }) {
   if (!data) return null;
 
   switch (agentId) {
@@ -82,7 +101,10 @@ function AgentContent({ agentId, data }) {
         </div>
       );
 
-    case 'flights':
+    case 'flights': {
+      // Google Flights search URL pre-filled with route
+      const flightsUrl = `https://www.google.com/travel/flights?q=flights+from+${encodeURIComponent(tripDetails?.departureCity || '')}+to+${encodeURIComponent(tripDetails?.destination || '')}`;
+      const mmtUrl = `https://www.makemytrip.com/flights/`;
       return (
         <div className="agent-content">
           {data.cheapestPrice && (
@@ -98,10 +120,16 @@ function AgentContent({ agentId, data }) {
           ))}
           {data.bestOption && <p><strong>Best option:</strong> {data.bestOption}</p>}
           {data.bookingTip && <p className="tip"><strong>Tip:</strong> {data.bookingTip}</p>}
+          <div className="booking-links">
+            <BookingLink href={flightsUrl} label="Search Google Flights" />
+            <BookingLink href={mmtUrl} label="Search MakeMyTrip" />
+          </div>
         </div>
       );
+    }
 
-    case 'cars':
+    case 'cars': {
+      const kayakUrl = `https://www.kayak.com/cars/${encodeURIComponent(tripDetails?.destination || '')}/${tripDetails?.startDate || ''}/${tripDetails?.endDate || ''}`;
       return (
         <div className="agent-content">
           {data.recommendation && <p>{data.recommendation}</p>}
@@ -114,10 +142,16 @@ function AgentContent({ agentId, data }) {
           ))}
           {data.bookingTip && <p className="tip"><strong>Booking:</strong> {data.bookingTip}</p>}
           {data.drivingTip && <p className="tip"><strong>Driving:</strong> {data.drivingTip}</p>}
+          <div className="booking-links">
+            <BookingLink href={kayakUrl} label="Search Kayak Cars" />
+          </div>
         </div>
       );
+    }
 
-    case 'hotels':
+    case 'hotels': {
+      const bookingUrl = `https://www.booking.com/search.html?ss=${encodeURIComponent(tripDetails?.destination || '')}&checkin=${tripDetails?.startDate || ''}&checkout=${tripDetails?.endDate || ''}&group_adults=${tripDetails?.travelers || 2}`;
+      const hotelsUrl = `https://www.hotels.com/search.do?q-destination=${encodeURIComponent(tripDetails?.destination || '')}&q-check-in=${tripDetails?.startDate || ''}&q-check-out=${tripDetails?.endDate || ''}`;
       return (
         <div className="agent-content">
           {data.recommendation && <p>{data.recommendation}</p>}
@@ -129,8 +163,13 @@ function AgentContent({ agentId, data }) {
               <p>{opt.highlights}</p>
             </div>
           ))}
+          <div className="booking-links">
+            <BookingLink href={bookingUrl} label="Search Booking.com" />
+            <BookingLink href={hotelsUrl} label="Search Hotels.com" />
+          </div>
         </div>
       );
+    }
 
     case 'itinerary':
       // Itinerary is a markdown string — render as pre-formatted text
@@ -209,7 +248,7 @@ function AgentContent({ agentId, data }) {
 }
 
 // ── Individual agent card ─────────────────────────────────────
-function AgentCard({ agentId, status, data, isHighlighted }) {
+function AgentCard({ agentId, status, data, isHighlighted, tripDetails }) {
   const config = AGENT_CONFIG[agentId];
   if (!config) return null;
 
@@ -228,7 +267,7 @@ function AgentCard({ agentId, status, data, isHighlighted }) {
           <p className="status-message running">{config.runningMsg}</p>
         )}
         {status === 'done' && (
-          <AgentContent agentId={agentId} data={data} />
+          <AgentContent agentId={agentId} data={data} tripDetails={tripDetails} />
         )}
       </div>
     </div>
@@ -385,6 +424,7 @@ export default function TripOutput({
                 status={agentStatuses[agentId] || 'waiting'}
                 data={agentResults[agentId]}
                 isHighlighted={lastUpdatedAgent === agentId}
+                tripDetails={tripDetails}
               />
             ))}
           </div>
