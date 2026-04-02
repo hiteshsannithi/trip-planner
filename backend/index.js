@@ -43,10 +43,15 @@ const app = express();
 //      localhost:3001. CORS headers tell the browser "this is allowed".
 //      Without this, every fetch() from the frontend would be blocked.
 //
-// In production, replace the origin with your actual frontend URL:
-// cors({ origin: 'https://your-app.vercel.app' })
+// ALLOWED_ORIGINS env var: comma-separated list of allowed origins.
+//   Dev:        not set → defaults to localhost only
+//   Production: set to "https://your-app.vercel.app" in Render dashboard
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',')
+  : ['http://localhost:5173', 'http://localhost:3000'];
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: allowedOrigins,
   methods: ['GET', 'POST'],
 }));
 

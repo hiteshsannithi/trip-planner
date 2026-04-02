@@ -162,8 +162,9 @@ export default function App() {
     setPhase('planning');
 
     try {
-      // [STREAMING] POST to /api/plan — Vite proxy forwards to localhost:3001
-      const response = await fetch('/api/plan', {
+      // [STREAMING] POST to /api/plan
+      // VITE_API_URL: empty in dev (Vite proxy handles it), set to Render URL in production
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/plan`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -232,7 +233,7 @@ export default function App() {
       // [STREAMING] POST to /api/chat with message + full context
       // WHY send agentResults: The server needs current plan data to
       // pass to routerAgent (for context) and to orchestrator (to rebuild plan)
-      const response = await fetch('/api/chat', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || ''}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message, tripDetails, agentResults }),
