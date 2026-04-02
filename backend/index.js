@@ -78,7 +78,7 @@ app.use('/api', chatRouter);
 // without triggering any AI logic. Also used by Render.com to check
 // if the deployment is healthy.
 app.get('/', (req, res) => {
-  res.json({ status: 'Trip Planner backend is running', version: '1.0.0' });
+  res.json({ status: 'Voyagr backend is running', version: '1.0.0' });
 });
 
 // ── Start server ──────────────────────────────────────────────
@@ -88,7 +88,7 @@ const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
   // This callback runs once, when the server is ready to accept connections.
-  console.log(`\n🚀 Trip Planner backend running on http://localhost:${PORT}`);
+  console.log(`\n✈️  Voyagr backend running on http://localhost:${PORT}`);
   console.log(`   Health check: http://localhost:${PORT}/`);
   console.log(`   Plan endpoint: POST http://localhost:${PORT}/api/plan\n`);
 });

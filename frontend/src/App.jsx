@@ -311,7 +311,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <h1>Trip Planner</h1>
+        <h1>✈️ Voyagr</h1>
         <p>AI-powered travel planning with 8 specialist agents</p>
       </header>
 
