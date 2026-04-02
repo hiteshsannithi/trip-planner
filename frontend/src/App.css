@@ -160,7 +160,34 @@ body {
 .output-container {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 20px;
+}
+
+/* Two-column layout: sticky chat left, scrollable plan right */
+.output-body {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* LEFT — sticky chat panel */
+.output-left {
+  width: 320px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 20px;
+  /* Cap height so it doesn't overflow the viewport */
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+}
+
+/* RIGHT — agent cards + full plan, takes remaining space */
+.output-right {
+  flex: 1;
+  min-width: 0; /* prevents flex child from overflowing */
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .output-header {
@@ -438,11 +465,17 @@ body {
 .chat-section {
   background: white;
   border-radius: 12px;
-  padding: 28px;
+  padding: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+}
+
+.chat-building {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  font-style: italic;
 }
 
 .chat-header h2 {
@@ -570,6 +603,12 @@ body {
 }
 
 /* ── Responsive ───────────────────────────────────────────── */
+@media (max-width: 900px) {
+  /* Stack chat below the plan cards on smaller screens */
+  .output-body { flex-direction: column-reverse; }
+  .output-left { width: 100%; position: static; max-height: none; }
+}
+
 @media (max-width: 640px) {
   .app-main { padding: 16px; }
   .form-row { grid-template-columns: 1fr; }

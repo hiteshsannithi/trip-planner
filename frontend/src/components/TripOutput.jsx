@@ -238,7 +238,7 @@ function AgentCard({ agentId, status, data, isHighlighted }) {
 // ── Chat section ──────────────────────────────────────────────
 // WHAT: The interactive chat panel shown after plan is complete.
 // PATTERN: Controlled input + scroll-to-bottom on new messages.
-function ChatSection({ messages, loading, onSendMessage }) {
+function ChatSection({ messages, loading, planComplete, onSendMessage }) {
   const [input, setInput] = useState('');
   const messagesEndRef = useRef(null);
 
@@ -266,14 +266,20 @@ function ChatSection({ messages, loading, onSendMessage }) {
     <div className="chat-section">
       <div className="chat-header">
         <h2>Refine Your Plan</h2>
-        <p>Ask me to change any part of the plan — hotels, flights, itinerary, budget, or packing.</p>
-        <p className="chat-examples">
-          Try: <em>"Find cheaper hotels under $100/night"</em> or <em>"Add a cooking class to the itinerary"</em> or <em>"My budget changed to $4000"</em>
-        </p>
+        {planComplete ? (
+          <>
+            <p>Ask me to change any part of the plan.</p>
+            <p className="chat-examples">
+              Try: <em>"Find cheaper hotels"</em>, <em>"Add a cooking class"</em>, <em>"My budget is $4000"</em>
+            </p>
+          </>
+        ) : (
+          <p className="chat-building">Building your plan — chat will be available when all agents finish.</p>
+        )}
       </div>
 
       <div className="chat-messages">
-        {messages.length === 0 && (
+        {messages.length === 0 && planComplete && (
           <p className="chat-empty">Your plan is ready. Ask me to change anything.</p>
         )}
         {messages.map((msg, i) => (
@@ -299,12 +305,12 @@ function ChatSection({ messages, loading, onSendMessage }) {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
-          disabled={loading}
+          disabled={loading || !planComplete}
         />
         <button
           className="chat-send-btn"
           onClick={handleSend}
-          disabled={loading || !input.trim()}
+          disabled={loading || !input.trim() || !planComplete}
         >
           {loading ? '...' : 'Send'}
         </button>
@@ -334,7 +340,7 @@ export default function TripOutput({
   return (
     <div className="output-container">
 
-      {/* Header */}
+      {/* Header — full width above the two-column layout */}
       <div className="output-header">
         <div>
           <h2>
@@ -356,35 +362,42 @@ export default function TripOutput({
         )}
       </div>
 
-      {/* Agent cards grid */}
-      <div className="agents-grid">
-        {agentOrder.map(agentId => (
-          <AgentCard
-            key={agentId}
-            agentId={agentId}
-            status={agentStatuses[agentId] || 'waiting'}
-            data={agentResults[agentId]}
-            isHighlighted={lastUpdatedAgent === agentId}
+      {/* Two-column layout: left = sticky chat, right = scrollable plan */}
+      <div className="output-body">
+
+        {/* LEFT — sticky chat panel (always visible, disabled while building) */}
+        <div className="output-left">
+          <ChatSection
+            messages={chatMessages}
+            loading={chatLoading}
+            planComplete={planComplete}
+            onSendMessage={onChatMessage}
           />
-        ))}
-      </div>
-
-      {/* Full plan — shown after orchestrator finishes */}
-      {fullPlan && (
-        <div className="full-plan">
-          <h2>Complete Travel Plan</h2>
-          <pre className="plan-text">{fullPlan}</pre>
         </div>
-      )}
 
-      {/* Chat section — shown only when plan is complete */}
-      {planComplete && (
-        <ChatSection
-          messages={chatMessages}
-          loading={chatLoading}
-          onSendMessage={onChatMessage}
-        />
-      )}
+        {/* RIGHT — agent cards + full plan (scrolls independently) */}
+        <div className="output-right">
+          <div className="agents-grid">
+            {agentOrder.map(agentId => (
+              <AgentCard
+                key={agentId}
+                agentId={agentId}
+                status={agentStatuses[agentId] || 'waiting'}
+                data={agentResults[agentId]}
+                isHighlighted={lastUpdatedAgent === agentId}
+              />
+            ))}
+          </div>
+
+          {fullPlan && (
+            <div className="full-plan">
+              <h2>Complete Travel Plan</h2>
+              <pre className="plan-text">{fullPlan}</pre>
+            </div>
+          )}
+        </div>
+
+      </div>
     </div>
   );
 }
